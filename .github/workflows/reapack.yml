@@ -2,7 +2,7 @@ name: ReaPack Indexer
 
 on:
   push:
-    branches: [ main, master ] # 注意：确认你的主分支是 main 还是 master
+    branches: [ main, master ]
 
 jobs:
   build:
@@ -11,7 +11,6 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run reapack-index
-        uses: cfillion/reapack-index-action@v1
+        uses: cfillion/reapack-index@v1  # 这里修正了，去掉了 -action
         with:
-          version: 1.2.3 # 这里指定 reapack-index 的版本，通常用较新的
           token: ${{ secrets.GITHUB_TOKEN }}
