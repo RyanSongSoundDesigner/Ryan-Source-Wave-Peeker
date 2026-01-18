@@ -8,13 +8,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 显式声明写权限
+      
     steps:
       - uses: actions/checkout@v3
 
+      # 第一步：直接下载官方工具
+      - name: Install reapack-index
+        run: |
+          wget -O reapack-index https://github.com/cfillion/reapack-index/releases/latest/download/reapack-index-linux-amd64
+          chmod +x reapack-index
+
+      # 第二步：运行工具并提交
       - name: Run reapack-index
-        uses: cfillion/reapack-index-action@v1
-        with:
-          version: 1.2.3
-          # 这一行意思是：把生成的 index.xml 直接提交回当前分支
-          commit: true
-          commit_message: "Auto-generate index.xml"
+        run: ./reapack-index --commit
