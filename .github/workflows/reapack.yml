@@ -2,31 +2,16 @@ name: ReaPack Indexer
 
 on:
   push:
-    branches: [ main, master ]
-  workflow_dispatch:
+    branches: [ main, master ] # 注意：确认你的主分支是 main 还是 master
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write  # 赋予写权限，否则无法提交 xml
-      
     steps:
       - uses: actions/checkout@v3
 
-      # 第一步：下载已知可用版本的二进制文件 (v1.2.4)
-      - name: Install reapack-index
-        run: |
-          wget -O reapack-index https://github.com/cfillion/reapack-index/releases/download/v1.2.4/reapack-index-linux-amd64
-          chmod +x reapack-index
-          sudo mv reapack-index /usr/local/bin/
-
-      # 第二步：配置 Git 身份 (伪装成机器人)
-      - name: Configure Git User
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      # 第三步：运行工具并提交
       - name: Run reapack-index
-        run: reapack-index --commit
+        uses: cfillion/reapack-index-action@v1
+        with:
+          version: 1.2.3 # 这里指定 reapack-index 的版本，通常用较新的
+          token: ${{ secrets.GITHUB_TOKEN }}
