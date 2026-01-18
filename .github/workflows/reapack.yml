@@ -9,16 +9,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 必须给写权限，否则无法提交 xml
+      contents: write  # 赋予写权限，否则无法提交 xml
       
     steps:
       - uses: actions/checkout@v3
 
-      # 第一步：使用 Ruby Gem 安装 (比 wget 更稳定)
+      # 第一步：下载已知可用版本的二进制文件 (v1.2.4)
       - name: Install reapack-index
-        run: gem install reapack-index
+        run: |
+          wget -O reapack-index https://github.com/cfillion/reapack-index/releases/download/v1.2.4/reapack-index-linux-amd64
+          chmod +x reapack-index
+          sudo mv reapack-index /usr/local/bin/
 
-      # 第二步：配置身份信息 (防止提交时报错)
+      # 第二步：配置 Git 身份 (伪装成机器人)
       - name: Configure Git User
         run: |
           git config --global user.name "github-actions[bot]"
